@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Be My Valentine</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+
+<style>
+
+body {
+    margin: 0;
+    overflow: hidden;
+    background: linear-gradient(135deg, #ff9ecf, #ffc0cb, #ffb6d9);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    font-family: 'Pacifico', cursive;
+    text-align: center;
+    color: #b30059;
+}
+
+/* Floating Hearts */
+.heart {
+    position: absolute;
+    bottom: -50px;
+    animation: floatUp linear infinite;
+    opacity: 0.7;
+}
+
+@keyframes floatUp {
+    0% { transform: translateY(0); opacity: 0.8; }
+    100% { transform: translateY(-110vh); opacity: 0; }
+}
+
+#container {
+    position: relative;
+    z-index: 2;
+}
+
+h1 {
+    font-size: 45px;
+    margin-bottom: 10px;
+}
+
+img {
+    width: 220px;
+    margin-bottom: 20px;
+    border-radius: 15px;
+    transition: 0.3s ease;
+}
+
+button {
+    font-size: 20px;
+    padding: 15px 40px;
+    border: none;
+    cursor: pointer;
+    margin: 10px;
+    transition: 0.3s ease;
+    border-radius: 10px;
+    font-family: Arial, sans-serif;
+}
+
+#yesBtn {
+    background-color: #2ecc71;
+    color: white;
+}
+
+#noBtn {
+    background-color: #e74c3c;
+    color: white;
+    position: relative;
+}
+
+#success {
+    font-size: 55px;
+    display: none;
+}
+
+</style>
+</head>
+
+<body>
+
+<script>
+function createHeart() {
+    const heart = document.createElement("div");
+    heart.classList.add("heart");
+    heart.innerHTML = "💖";
+    heart.style.left = Math.random() * 100 + "vw";
+    heart.style.fontSize = (Math.random() * 20 + 15) + "px";
+    heart.style.animationDuration = (Math.random() * 3 + 4) + "s";
+    document.body.appendChild(heart);
+    setTimeout(() => heart.remove(), 6000);
+}
+setInterval(createHeart, 300);
+</script>
+
+<div id="container">
+
+    <h1 id="question">Will you be my Valentine?</h1>
+
+    <img id="emotionGif" 
+    src="https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif"
+    alt="emotion">
+
+    <br>
+
+    <button id="yesBtn" onclick="yesClicked()">Yes</button>
+    <button id="noBtn" onclick="noClicked()">No</button>
+
+    <div id="success">💘 I knew you'd say yes!!! You just made my day! 💘</div>
+
+</div>
+
+<script>
+
+let noCount = 0;
+let yesBtn = document.getElementById("yesBtn");
+let noBtn = document.getElementById("noBtn");
+let gif = document.getElementById("emotionGif");
+
+let messages = [
+    "No",
+    "No... are you sure?",
+    "Really sure?",
+    "Think again!",
+    "Last chance!",
+    "Still no?",
+    "Why though?"
+];
+
+/* Mood progression: Happy → Confused → Sad → Crying → Dramatic */
+let gifs = [
+    "https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif",  // happy
+    "https://media.giphy.com/media/3o7btPCcdNniyf0ArS/giphy.gif",  // confused
+    "https://media.giphy.com/media/OPU6wzx8JrHna/giphy.gif",  // sad
+    "https://media.giphy.com/media/26ufdipQqU2lhNA4g/giphy.gif",  // crying
+    "https://media.giphy.com/media/9Y5BbDSkSTiY8/giphy.gif"   // dramatic crying
+];
+
+function noClicked() {
+
+    noCount++;
+
+    if (noCount <= 7) {
+
+        noBtn.innerText = messages[noCount - 1];
+
+        let shrink = 1 - noCount * 0.1;
+        if (shrink < 0.3) shrink = 0.3;
+        noBtn.style.transform = "scale(" + shrink + ")";
+
+        let grow = 1 + noCount * 0.25;
+        yesBtn.style.transform = "scale(" + grow + ")";
+
+        // Change GIF mood
+        let gifIndex = Math.min(Math.floor(noCount / 2), gifs.length - 1);
+        gif.src = gifs[gifIndex];
+
+    } else {
+
+        let x = Math.random() * (window.innerWidth - 150);
+        let y = Math.random() * (window.innerHeight - 80);
+
+        noBtn.style.position = "absolute";
+        noBtn.style.left = x + "px";
+        noBtn.style.top = y + "px";
+    }
+}
+
+function yesClicked() {
+
+    document.getElementById("question").style.display = "none";
+    yesBtn.style.display = "none";
+    noBtn.style.display = "none";
+    gif.style.display = "none";
+
+    document.getElementById("success").style.display = "block";
+}
+
+</script>
+
+</body>
+</html>
